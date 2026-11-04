@@ -1,0 +1,74 @@
+name: Gerar APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund
+
+      - name: Criar projeto Android
+        run: npx cap add android
+
+      - name: Gerar ícone e tela de abertura
+        continue-on-error: true
+        run: npx @capacitor/assets generate --android --iconBackgroundColor "#0b1210" --iconBackgroundColorDark "#0b1210" --splashBackgroundColor "#0b1210" --splashBackgroundColorDark "#0b1210"
+
+      - name: Permissões do GPS em segundo plano
+        run: node scripts/patch-android.js
+
+      - name: Copiar o app para o Android
+        run: npx cap sync android
+
+      - name: Chave fixa (para atualizar sem desinstalar)
+        run: |
+          mkdir -p ~/.android
+          cp keys/debug.keystore ~/.android/debug.keystore
+
+      - name: Compilar APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Renomear APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk RodadaLucro.apk
+
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: RodadaLucro-apk
+          path: RodadaLucro.apk
+
+      - name: Publicar na página de Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Rodada Lucro v1.0.${{ github.run_number }}
+          body: APK gerado automaticamente. Baixe o RodadaLucro.apk abaixo e instale no celular.
+          files: RodadaLucro.apk
