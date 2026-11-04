@@ -1,0 +1,180 @@
+{
+  "rules": {
+    "staff": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || ((auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm'))",
+        ".write": "(auth != null && auth.token.email === 'beto01@gmail.com') || (((auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm') && newData.child('cargo').val() !== 'adm' && data.child('cargo').val() !== 'adm')"
+      }
+    },
+    "agentes_usuarios": {
+      ".read": true,
+      "$u": {
+        ".write": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm'"
+      }
+    },
+    "agentes_cadastro": {
+      ".read": "auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true",
+      "$key": {
+        ".write": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm'"
+      }
+    },
+    "agentes": {
+      ".read": "auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true",
+      "$key": {
+        ".write": "auth != null && root.child('staff').child(auth.uid).child('key').val() === $key"
+      }
+    },
+    "presenca": {
+      ".read": "auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true",
+      "$key": {
+        ".write": "auth != null && root.child('staff').child(auth.uid).child('key').val() === $key"
+      }
+    },
+    "auditoria": {
+      ".read": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && (root.child('staff').child(auth.uid).child('cargo').val() === 'adm' || root.child('staff').child(auth.uid).child('cargo').val() === 'fiscal')",
+      "$id": {
+        ".write": "!data.exists() && newData.exists() && ((auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) || (newData.child('categoria').val() === 'Acesso' && newData.child('acao').val() === 'Tentativa de login falhou'))"
+      }
+    },
+    "config": {
+      ".read": "auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true",
+      ".write": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm'",
+      "fluxo": {
+        ".read": true
+      },
+      "bot": {
+        ".read": true
+      },
+      "horario": {
+        ".read": true
+      },
+      "mensagensFinal": {
+        ".read": true
+      }
+    },
+    "keywords": {
+      ".read": true,
+      ".write": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm'"
+    },
+    "respostas_rapidas": {
+      ".read": "auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true",
+      ".write": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && (root.child('staff').child(auth.uid).child('cargo').val() === 'adm' || root.child('staff').child(auth.uid).child('cargo').val() === 'suporte')"
+    },
+    "publico": {
+      ".read": true,
+      ".write": "auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true"
+    },
+    "fila_espera": {
+      ".read": "auth != null",
+      "$tid": {
+        ".write": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) || (auth != null && ((!data.exists() && newData.child('uid').val() === auth.uid) || data.child('uid').val() === auth.uid))"
+      }
+    },
+    "fila": {
+      ".read": "auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true",
+      "$tid": {
+        ".read": "auth != null && data.child('cidadaoUid').val() === auth.uid",
+        ".write": "(((auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && (root.child('staff').child(auth.uid).child('cargo').val() === 'adm' || root.child('staff').child(auth.uid).child('cargo').val() === 'suporte')) && newData.exists()) || (auth != null && ((!data.exists() && newData.child('cidadaoUid').val() === auth.uid) || (data.child('cidadaoUid').val() === auth.uid && newData.exists())))"
+      }
+    },
+    "historico": {
+      ".read": "auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true",
+      "$tid": {
+        ".write": "(((auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && (root.child('staff').child(auth.uid).child('cargo').val() === 'adm' || root.child('staff').child(auth.uid).child('cargo').val() === 'suporte')) && newData.exists()) || (auth != null && newData.child('cidadaoUid').val() === auth.uid && (!data.exists() || data.child('cidadaoUid').val() === auth.uid))"
+      }
+    },
+    "conexoes": {
+      ".read": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true)",
+      "$id": {
+        ".write": "auth != null && ((newData.exists() && newData.child('uid').val() === auth.uid && (!data.exists() || data.child('uid').val() === auth.uid)) || (!newData.exists() && (data.child('uid').val() === auth.uid || ((auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm'))))"
+      }
+    },
+    "metricas": {
+      ".read": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true)",
+      ".write": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && (root.child('staff').child(auth.uid).child('cargo').val() === 'adm' || root.child('staff').child(auth.uid).child('cargo').val() === 'suporte')"
+    },
+    "fluxo_acesso": {
+      ".read": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm'",
+      ".write": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm'",
+      "$token": {
+        ".read": "auth != null"
+      }
+    },
+    "fluxo_rascunho": {
+      ".read": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm'",
+      ".write": "(auth != null && root.child('staff').child(auth.uid).child('ativo').val() === true) && root.child('staff').child(auth.uid).child('cargo').val() === 'adm'",
+      "$token": {
+        ".read": "auth != null && root.child('fluxo_acesso').child($token).child('ativo').val() === true",
+        ".write": "auth != null && root.child('fluxo_acesso').child($token).child('ativo').val() === true",
+        "autor": {
+          ".validate": "newData.isString() && newData.val().length <= 80"
+        },
+        "greeting": {
+          ".validate": "newData.isString() && newData.val().length <= 1500"
+        },
+        "status": {
+          ".validate": "newData.val() === 'rascunho' || newData.val() === 'enviado' || newData.val() === 'publicado'"
+        },
+        "atualizadoEm": {
+          ".validate": "newData.isNumber()"
+        },
+        "enviadoEm": {
+          ".validate": "newData.isNumber()"
+        },
+        "publicadoEm": {
+          ".validate": "newData.isNumber()"
+        },
+        "menus": {
+          "$i": {
+            ".validate": "$i.matches(/^[0-9]{1,2}$/)",
+            "label": {
+              ".validate": "newData.isString() && newData.val().length <= 120"
+            },
+            "question": {
+              ".validate": "newData.isString() && newData.val().length <= 200"
+            },
+            "options": {
+              "$j": {
+                ".validate": "$j.matches(/^[0-9]{1,2}$/)",
+                "text": {
+                  ".validate": "newData.isString() && newData.val().length <= 120"
+                },
+                "orient": {
+                  ".validate": "newData.isString() && newData.val().length <= 3000"
+                },
+                "link": {
+                  ".validate": "newData.isString() && newData.val().length <= 500"
+                },
+                "$o": {
+                  ".validate": false
+                }
+              }
+            },
+            "$m": {
+              ".validate": false
+            }
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "chat": {
+      ".read": true,
+      ".indexOn": [
+        "ts"
+      ],
+      "$msg": {
+        ".write": "!data.exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['n','t','ts']) && newData.child('n').isString() && newData.child('n').val().length >= 2 && newData.child('n').val().length <= 20 && newData.child('t').isString() && newData.child('t').val().length >= 1 && newData.child('t').val().length <= 300 && newData.child('ts').val() === now"
+      }
+    },
+    "motoristas": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    }
+  }
+}

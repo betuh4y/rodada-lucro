@@ -1,0 +1,15 @@
+{
+  "appId": "br.com.rodadalucro.app",
+  "appName": "Rodada Lucro",
+  "webDir": "www",
+  "backgroundColor": "#0b1210",
+  "android": {
+    "useLegacyBridge": true
+  },
+  "plugins": {
+    "SystemBars": {
+      "style": "DARK",
+      "insetsHandling": "css"
+    }
+  }
+}

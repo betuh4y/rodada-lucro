@@ -1,0 +1,22 @@
+{
+  "name": "rodada-lucro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Rodada Lucro - controle financeiro para motoristas de aplicativo",
+  "scripts": {
+    "android:add": "cap add android",
+    "android:sync": "cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/filesystem": "^8.0.0",
+    "@capacitor/share": "^8.0.0",
+    "@capacitor-community/background-geolocation": "^1.2.27"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.0.0"
+  }
+}
